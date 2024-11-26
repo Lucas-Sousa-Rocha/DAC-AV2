@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Listagem de Jogos</title>
+</h:head>
+<h:body>
+    <h:form id="formListagem">
+
+        <!-- Título da Página -->
+        <h1>Listagem de Jogos</h1>
+
+        <!-- Link para voltar ao formulário de cadastro -->
+        <h:outcome value="Cadastrar novo Jogo" action="index.xhtml" />
+
+        <!-- DataTable para listar os jogos -->
+        <p:dataTable value="#{jogoBean.listaJogos}" var="jogo" editable="true" paginator="true"
+                     rows="10" style="margin-top:20px" emptyMessage="Nenhum jogo encontrado.">
+
+            <!-- Coluna: ID do jogo -->
+            <p:column headerText="ID">
+                <h:outputText value="#{jogo.id}" />
+            </p:column>
+
+            <!-- Coluna: Data de Cadastro -->
+            <p:column headerText="Data de Cadastro">
+                <h:outputText value="#{jogo.dataCadastro}">
+                 <!--     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> -->
+                </h:outputText>
+            </p:column>
+
+            <!-- Coluna: Número Sorteado -->
+            <p:column headerText="Número Sorteado">
+                <h:outputText value="#{jogo.numeroSorteado}" />
+            </p:column>
+
+            <!-- Colunas: Valores v1 a v5 -->
+            <p:column headerText="Valores">
+                <h:outputText value="#{jogo.v1}, #{jogo.v2}, #{jogo.v3}, #{jogo.v4}, #{jogo.v5}" />
+            </p:column>
+
+            <!-- Botão para editar -->
+            <p:column headerText="Editar">
+                <p:commandButton value="Editar" update=":formListagem"
+                                 actionListener="#{jogoBean.editar(jogo)}" />
+            </p:column>
+
+            <!-- Botão para excluir -->
+            <p:column headerText="Excluir">
+                <p:commandButton value="Excluir" update=":formListagem"
+                                 actionListener="#{jogoBean.excluir(jogo)}" />
+            </p:column>
+
+            <!-- Botão para exibir o maior número entre v1 e v5 -->
+            <p:column headerText="Maior">
+                <p:commandButton value="Maior" oncomplete="PF('dlgMaior').show()"
+                                 actionListener="#{jogoBean.maiorNumero(jogo)}" />
+                <!-- Dialog para exibir o maior número -->
+                <p:dialog header="Maior Número" widgetVar="dlgMaior" modal="true" width="300">
+               <!--       <h:outputText value="Maior número: #{jogoBean.maiorNumero(jogo)}" /> -->
+                </p:dialog>
+            </p:column>
+
+            <!-- Botão para verificar se o número sorteado está entre os valores v1 a v5 -->
+            <p:column headerText="Resultado">
+                <p:commandButton value="Resultado" oncomplete="PF('dlgResultado').show()"
+                                 actionListener="#{jogoBean.isNumeroSorteadoPresente(jogo)}" />
+                <!-- Dialog para exibir o resultado -->
+                <p:dialog header="Resultado" widgetVar="dlgResultado" modal="true" width="300">
+                <!--      <h:outputText value="#{jogoBean.isNumeroSorteadoPresente(jogo) ? 'Sim' : 'Não'}" /> -->
+                </p:dialog>
+            </p:column>
+        </p:dataTable>
+
+        <!-- Botão para exibir o maior número sorteado entre todos os jogos -->
+        <p:commandButton value="Maior Número Sorteado" update=":formListagem"
+                         oncomplete="PF('dlgMaiorSorteado').show()" actionListener="#{jogoBean.maiorNumero()}" />
+        <!-- Dialog para exibir o maior número sorteado -->
+        <p:dialog header="Maior Número Sorteado" widgetVar="dlgMaiorSorteado" modal="true" width="300">
+            <h:outputText value="Maior número sorteado: #{jogoBean.maiorNumero()}" />
+        </p:dialog>
+
+    </h:form>
+</h:body>
+</html>
